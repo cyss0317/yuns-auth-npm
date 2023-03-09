@@ -1,12 +1,15 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Test from "./components/Test";
 import "./App.css";
+import { ApiCaller } from "./resources/helpers";
 
+declare global {
+  interface Window {
+    caller: any;
+  }
+}
 function App() {
-  const [count, setCount] = useState(0);
-
+  window.caller = ApiCaller;
   return (
     <div className="App">
       <BrowserRouter>
