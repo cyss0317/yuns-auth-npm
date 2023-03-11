@@ -1,16 +1,20 @@
 import { ApiCaller } from "../helpers/index";
-import { UserType } from "./types";
+import { UserId, UserType, UserPayload } from "./types";
 
-class User extends ApiCaller {
+export default class User extends ApiCaller {
   static path = "users";
 
-  static signup = async (user: UserType) => {
+  static signup = async (user: Partial<UserPayload>) => {
     const result = await ApiCaller.makeRequest("users", "POST", user);
     return result;
   };
 
-  static update = async (user: Partial<UserType>) => {
+  static update = async (user: Partial<UserPayload>) => {
     const result = await ApiCaller.makeRequest("users", "PATCH", user);
     return result;
   };
+
+  // static delete = async (userId: UserId) => {
+  //   const result = await APICaller.makeRequest("users", "DELETE", )
+  // }
 }
