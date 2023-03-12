@@ -28,8 +28,10 @@ export class ApiCaller {
     body?: object,
     wildCard?: number
   ) => {
-    const endpoint = `${this.baseUrl}/${path}`;
-    wildCard && endpoint.concat(`/${wildCard}`);
+    let endpoint = `${this.baseUrl}/${path}`;
+    if (!!wildCard) {
+      endpoint += `/${wildCard}`;
+    }
     const options = makeOptions(method, body);
 
     try {

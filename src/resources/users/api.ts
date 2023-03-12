@@ -9,8 +9,13 @@ export default class User extends ApiCaller {
     return result;
   };
 
-  static update = async (user: Partial<UserPayload>) => {
-    const result = await ApiCaller.makeRequest("users", "PATCH", user);
+  static update = async (object: Partial<UserPayload>) => {
+    const result = await ApiCaller.makeRequest(
+      "users",
+      "PATCH",
+      object.user,
+      3
+    );
     return result;
   };
 
