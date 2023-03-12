@@ -1,17 +1,14 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import Test from "./components/Test";
 import "./App.css";
+import { ApiCaller } from "./resources/helpers";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <div className="App">
       <BrowserRouter>
         <Switch>
-          <Route exact path="/home" component={Test} />
+          <Route path="/" component={Test} />
         </Switch>
       </BrowserRouter>
     </div>
