@@ -49,7 +49,6 @@ function Test() {
       console.log(err);
     }
   };
-
   return (
     <form className="user-form" onSubmit={async (e) => submitForm(e)}>
       {formInputs.map((input, i) => (
@@ -62,7 +61,9 @@ function Test() {
           onChange={setUserPayload}
         />
       ))}
-      <button type="submit">Submit</button>
+      <button type="submit" className="button">
+        Submit
+      </button>
     </form>
   );
 }
