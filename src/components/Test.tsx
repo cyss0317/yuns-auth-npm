@@ -1,10 +1,24 @@
 import UserApi from "../resources/users/api";
 import React from "react";
+import Input from "./Input";
 import { Field, Form, Formik } from "formik";
 import { UserPayload } from "../resources/users/types";
 
+const formInputs = [
+  { name: "first_name", displayName: "First Name:" },
+  { name: "last_name", displayName: "Last Name:" },
+  { name: "email", displayName: "Email:" },
+  { name: "password", displayName: "Password:", type: "password" },
+  {
+    name: "password_confirmation",
+    displayName: "Password Confirmation:",
+    type: "password",
+  },
+  { name: "org_name", displayName: "Organization Name:" },
+];
+
 function Test() {
-  const [user, setUser] = React.useState<any>({
+  const [userPayload, setUserPayload] = React.useState<any>({
     id: null,
     first_name: "",
     last_name: "",
@@ -13,90 +27,43 @@ function Test() {
     password_confirmation: "",
     org_name: "",
   });
+  const [user, setUser] = React.useState<any>(null);
+  console.log(user);
+
+  const submitForm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log(userPayload);
+    try {
+      const response = await UserApi.signup({ user: userPayload });
+      setUser(response);
+      setUserPayload({
+        id: null,
+        first_name: "",
+        last_name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+        org_name: "",
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
-    <div>
-      {/* <Formik initialValues={formikInitialValues}
-       onSubmit={async (values) => {
-          const response = await UserApi.signup(values);
-          console.log(response);
-       }} 
-      > */}
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          console.log(user);
-          try {
-            UserApi.signup({ user });
-            setUser({
-              id: null,
-              first_name: "",
-              last_name: "",
-              email: "",
-              password: "",
-              password_confirmation: "",
-              org_name: "",
-            });
-          } catch (err) {
-            console.log(err);
-          }
-        }}
-      >
-        <label htmlFor="first_name">First Name:</label>
-        <input
-          id="first_name"
-          name="first_name"
-          type="text"
-          value={user.first_name}
-          onChange={(e) => setUser({ ...user, first_name: e.target.value })}
+    <form className="user-form" onSubmit={async (e) => submitForm(e)}>
+      {formInputs.map((input, i) => (
+        <Input
+          key={`${input.name}-${i}`}
+          name={input.name}
+          displayName={input.displayName}
+          type={input.type}
+          value={userPayload}
+          onChange={setUserPayload}
         />
-        <label htmlFor="last_name">Last Name:</label>
-        <input
-          id="last_name"
-          name="last_name"
-          type="text"
-          value={user.last_name}
-          onChange={(e) => setUser({ ...user, last_name: e.target.value })}
-        />
-        <label htmlFor="email">Email:</label>
-        <input
-          id="email"
-          name="email"
-          type="email"
-          value={user.email}
-          onChange={(e) => setUser({ ...user, email: e.target.value })}
-          placeholder="email@email.com"
-        />
-        <label htmlFor="password">Password:</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          value={user.password}
-          onChange={(e) => setUser({ ...user, password: e.target.value })}
-        />
-        <label htmlFor="password_confirmation">Password Confirmation:</label>
-        <input
-          id="password_confirmation"
-          name="password_confirmation"
-          type="password"
-          value={user.password_confirmation}
-          onChange={(e) =>
-            setUser({ ...user, password_confirmation: e.target.value })
-          }
-        />
-        <label htmlFor="org_name">Organization Name:</label>
-        <input
-          id="org_name"
-          name="org_name"
-          type="text"
-          value={user.org_name}
-          onChange={(e) => setUser({ ...user, org_name: e.target.value })}
-        />
-        <button type="submit">Submit</button>
-      </form>
-      {/* </Formik> */}
-    </div>
+      ))}
+      <button type="submit">Submit</button>
+    </form>
   );
 }
 
