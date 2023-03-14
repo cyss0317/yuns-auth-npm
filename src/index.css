@@ -43,6 +43,10 @@ h6 {
 }
 
 /* CSS reset */
+.App {
+  width: 400px;
+}
+
 .user-form {
   display: flex;
   display: flex;
@@ -50,7 +54,7 @@ h6 {
   align-items: self-end;
   margin: 1rem;
   gap: 1rem;
-  width: 340px;
+  /* width: 340px; */
 }
 
 .margin-1 {
@@ -80,10 +84,15 @@ h6 {
 .input {
   border-radius: 1rem;
   padding-left: 1rem;
+  margin-left: 1rem;
 }
 
 .input:focus {
   border-color: "red";
+}
+
+.button:has(> a) {
+  background-color: none !important;
 }
 
 .button {
@@ -91,10 +100,23 @@ h6 {
   border-radius: 1rem;
   background-color: #f0f0f0;
   padding: 0 0.5rem 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+
+.button > a {
+  text-decoration: none;
+  color: black;
 }
 
 .button:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: 0.1s;
+}
+
+.button-group {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
 }
