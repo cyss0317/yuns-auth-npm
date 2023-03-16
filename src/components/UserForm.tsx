@@ -3,6 +3,7 @@ import React from "react";
 import Input from "./Input";
 import { Field, Form, Formik } from "formik";
 import { UserPayload } from "../resources/users/types";
+import SessionApi from "../resources/sessions/api";
 
 const registerInputs = [
   { name: "first_name", displayName: "First Name:" },
@@ -23,10 +24,10 @@ const signInInputs = [
 ];
 
 interface UserFormProps {
-  signIn?: boolean;
+  formType: "signIn" | "loggedIn" | "signUp";
 }
 export default function UserForm(props: UserFormProps) {
-  const { signIn = false } = props;
+  const {formType} = props;
   const [userPayload, setUserPayload] = React.useState<any>({
     id: null,
     first_name: "",
@@ -39,35 +40,45 @@ export default function UserForm(props: UserFormProps) {
   const [user, setUser] = React.useState<any>(null);
   console.log(user);
 
-  const submitForm = async (e: React.FormEvent) => {
+  const submitForm = async (
+    e: React.FormEvent,
+    formType: "signIn" | "loggedIn" | "signUp"
+  ) => {
     e.preventDefault();
-    console.log(userPayload);
-    try {
-      if (signIn) {
-        const response = await UserApi.login({ user: userPayload})
-      }
-      const response = await UserApi.signup({ user: userPayload });
-      setUser(response);
-      setUserPayload({
-        id: null,
-        first_name: "",
-        last_name: "",
-        email: "",
-        password: "",
-        password_confirmation: "",
-        org_name: "",
-      });
-    } catch (err) {
-      console.log(err);
+
+    switch (formType) {
+      case "signIn":
+        let signInResponse = await SessionApi.login({
+          user: {
+            email: userPayload.email,
+            password: userPayload.password,
+            org_name: userPayload.org_name,
+          },
+        });
+        setUser(signInResponse);
+        return;
+        break;
+      case "signUp":
+        let signUpResponse = await UserApi.signup({ user: userPayload });
+        setUser(signUpResponse);
+      case "loggedIn":
+        let loggedInResponse = await SessionApi.loggedIn();
+        setUser(loggedInResponse);  
+      default:
+        console.log("error")
+        break;
+        
     }
   };
+
+
   return (
     <form
       className="user-form"
       id="user-form"
-      onSubmit={async (e) => submitForm(e)}
+      onSubmit={async (e) => submitForm(e, formType)}
     >
-      {signIn
+      {formType === "signIn"
         ? signInInputs.map((input, i) => (
             <Input
               key={`${input.name}-${i}`}
