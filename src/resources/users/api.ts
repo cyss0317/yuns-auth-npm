@@ -1,7 +1,7 @@
 import { ApiCaller } from "../helpers/index";
-import { UserId, UserType, UserPayload } from "./types";
+import { UserId, UserTypes, UserPayload } from "./types";
 
-export default class User extends ApiCaller {
+export default class UserApi extends ApiCaller {
   static path = "users";
 
   static signup = async (user: Partial<UserPayload>) => {

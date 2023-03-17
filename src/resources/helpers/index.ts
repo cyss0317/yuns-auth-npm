@@ -19,11 +19,12 @@ export function makeOptions(method: Method, body?: object) {
   return options;
 }
 
+type Path = "users" | "organizations" | "sessions" | any;
 export class ApiCaller {
   static baseUrl = `${config.BASE_URL}/api`;
 
   static makeRequest = async (
-    path: "users" | "organizations",
+    path: Path,
     method: Method,
     body?: object,
     wildCard?: number

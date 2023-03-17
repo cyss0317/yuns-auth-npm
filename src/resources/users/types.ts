@@ -1,19 +1,24 @@
-export type UserId = number;
-export interface UserType {
-  id: UserType;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  passwordDigest: string;
-  passowrd?: string;
-  passwordConfirmation?: string;
-  sessionToken?: string;
-  orgId: number;
+export type UserId = number | null;
+export interface UserPayloadType extends UserType {
+  password?: string;
+  password_confirmation?: string;
+  org_name: string;
 }
 
-export interface UserPayload {
+export interface UserResponse {
   user: UserType;
+}
+
+export interface UserType {
+  id: UserId;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone?: string;
+  created_at: Date;
+  updated_at: Date;
+  org_id: number;
+}
+export interface UserPayload {
+  user: Partial<UserType>;
 }
