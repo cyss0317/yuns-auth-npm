@@ -4,6 +4,7 @@ import Input from "./Input";
 import { Field, Form, Formik } from "formik";
 import { UserPayload } from "../resources/users/types";
 import SessionApi from "../resources/sessions/api";
+import Buttons from "../layouts/Buttons";
 
 const registerInputs = [
   { name: "first_name", displayName: "First Name:" },
@@ -26,6 +27,7 @@ const signInInputs = [
 interface UserFormProps {
   formType: "signIn" | "loggedIn" | "signUp";
 }
+
 export default function UserForm(props: UserFormProps) {
   const {formType} = props;
   const [userPayload, setUserPayload] = React.useState<any>({
@@ -99,6 +101,7 @@ export default function UserForm(props: UserFormProps) {
               onChange={setUserPayload}
             />
           ))}
+        <Buttons formType={formType} />
     </form>
   );
 }
