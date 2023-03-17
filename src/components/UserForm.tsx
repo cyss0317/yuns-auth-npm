@@ -1,8 +1,6 @@
 import UserApi from "../resources/users/api";
 import React from "react";
 import Input from "./Input";
-import { Field, Form, Formik } from "formik";
-import { UserPayload } from "../resources/users/types";
 import SessionApi from "../resources/sessions/api";
 import Buttons from "../layouts/Buttons";
 
@@ -24,12 +22,13 @@ const signInInputs = [
   { name: "org_name", displayName: "Organization Name:" },
 ];
 
+export type FormType = "signIn" | "loggedIn" | "signUp";
 interface UserFormProps {
-  formType: "signIn" | "loggedIn" | "signUp";
+  formType: FormType;
 }
 
 export default function UserForm(props: UserFormProps) {
-  const {formType} = props;
+  const { formType } = props;
   const [userPayload, setUserPayload] = React.useState<any>({
     id: null,
     first_name: "",
@@ -65,20 +64,18 @@ export default function UserForm(props: UserFormProps) {
         setUser(signUpResponse);
       case "loggedIn":
         let loggedInResponse = await SessionApi.loggedIn();
-        setUser(loggedInResponse);  
+        setUser(loggedInResponse);
       default:
-        console.log("error")
+        console.log("error");
         break;
-        
     }
   };
-
 
   return (
     <form
       className="user-form"
       id="user-form"
-      onSubmit={async (e) => submitForm(e, formType)}
+      onSubmit={(e) => submitForm(e, formType)}
     >
       {formType === "signIn"
         ? signInInputs.map((input, i) => (
@@ -101,7 +98,7 @@ export default function UserForm(props: UserFormProps) {
               onChange={setUserPayload}
             />
           ))}
-        <Buttons formType={formType} />
+      <Buttons formType={formType} />
     </form>
   );
 }

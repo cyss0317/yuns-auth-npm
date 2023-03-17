@@ -4,6 +4,10 @@
   box-sizing: border-box;
 }
 * {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+}
+* {
   margin: 0;
 }
 html,
@@ -44,7 +48,7 @@ h6 {
 
 /* CSS reset */
 .App {
-  width: 400px;
+  width: 440px;
 }
 
 .user-form {
@@ -87,10 +91,6 @@ h6 {
   margin-left: 1rem;
 }
 
-.input:focus {
-  border-color: "red";
-}
-
 .button:has(> a) {
   background-color: none !important;
 }
@@ -98,11 +98,11 @@ h6 {
 .button {
   border: none;
   border-radius: 1rem;
-  background-color: #f0f0f0;
-  padding: 0 0.5rem 0 0.5rem;
+  background-color: #cccaf8;
+  padding: 0 0.8rem 0 0.8rem;
+  margin: 0 0.5rem 0 0.5rem;
   font-size: 1.1rem;
 }
-
 
 .button > a {
   text-decoration: none;
@@ -119,4 +119,20 @@ h6 {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #a9a5f3;
+}
+
+.input + label.input-label {
+  color: #7b74f9;
+}
+
+.input {
+  border: 1.5px solid rgb(219, 215, 250);
+  border-radius: 0.3rem;
+  padding-left: 0.5rem;
+  margin-left: 0.5rem;
 }
