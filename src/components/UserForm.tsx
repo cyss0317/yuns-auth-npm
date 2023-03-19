@@ -72,33 +72,35 @@ export default function UserForm(props: UserFormProps) {
   };
 
   return (
-    <form
-      className="user-form"
-      id="user-form"
-      onSubmit={(e) => submitForm(e, formType)}
-    >
-      {formType === "signIn"
-        ? signInInputs.map((input, i) => (
-            <Input
-              key={`${input.name}-${i}`}
-              name={input.name}
-              displayName={input.displayName}
-              type={input.type}
-              value={userPayload}
-              onChange={setUserPayload}
-            />
-          ))
-        : registerInputs.map((input, i) => (
-            <Input
-              key={`${input.name}-${i}`}
-              name={input.name}
-              displayName={input.displayName}
-              type={input.type}
-              value={userPayload}
-              onChange={setUserPayload}
-            />
-          ))}
-      <Buttons formType={formType} />
-    </form>
+    <div>
+      <form
+        className="user-form"
+        id="user-form"
+        onSubmit={(e) => submitForm(e, formType)}
+      >
+        {formType === "signIn"
+          ? signInInputs.map((input, i) => (
+              <Input
+                key={`${input.name}-${i}`}
+                name={input.name}
+                displayName={input.displayName}
+                type={input.type}
+                value={userPayload}
+                onChange={setUserPayload}
+              />
+            ))
+          : registerInputs.map((input, i) => (
+              <Input
+                key={`${input.name}-${i}`}
+                name={input.name}
+                displayName={input.displayName}
+                type={input.type}
+                value={userPayload}
+                onChange={setUserPayload}
+              />
+            ))}
+        <Buttons formType={formType} />
+      </form>
+    </div>
   );
 }

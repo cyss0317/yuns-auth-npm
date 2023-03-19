@@ -1,3 +1,7 @@
+:root {
+  --fontColor: #7b74f9;
+  --buttonFocusBackground: #716af7;
+}
 *,
 *::before,
 *::after {
@@ -49,6 +53,7 @@ h6 {
 /* CSS reset */
 .App {
   width: 440px;
+  overflow-y: auto;
 }
 
 .user-form {
@@ -102,17 +107,21 @@ h6 {
   padding: 0 0.8rem 0 0.8rem;
   margin: 0 0.5rem 0 0.5rem;
   font-size: 1.1rem;
+  color: #ffffff;
+  font-weight: 800;
 }
 
 .button > a {
+  font-weight: 800;
   text-decoration: none;
-  color: black;
+  color: #ffffff;
 }
 
 .button:hover {
   cursor: pointer;
   transform: scale(1.05);
   transition: 0.1s;
+  background-color: var(--buttonFocusBackground)
 }
 
 .button-group {
@@ -124,10 +133,12 @@ h6 {
 .input:focus {
   outline: none;
   border-color: #a9a5f3;
+  border: solid 2px;
 }
 
-.input + label.input-label {
-  color: #7b74f9;
+.input-label {
+  color: var(--fontColor);
+  -webkit-box-reflect: below -20px linear-gradient(transparent, rgba(102, 18, 18, 0.2));
 }
 
 .input {
@@ -135,4 +146,5 @@ h6 {
   border-radius: 0.3rem;
   padding-left: 0.5rem;
   margin-left: 0.5rem;
+  color: #716af7;
 }
