@@ -11,7 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<UserForm formType="signIn" />} />
           <Route path="/signup" element={<UserForm formType="signUp"/>} />
-          <Route path="/logged_in" element={<UserForm formType="loggedIn"/>} />
+          {/* <Route path="/logged_in" element={<UserForm formType="loggedIn"/>} /> */}
         </Routes>
       </BrowserRouter>
     </div>

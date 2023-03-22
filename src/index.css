@@ -121,7 +121,7 @@ h6 {
   cursor: pointer;
   transform: scale(1.05);
   transition: 0.1s;
-  background-color: var(--buttonFocusBackground)
+  background-color: var(--buttonFocusBackground);
 }
 
 .button-group {
@@ -136,6 +136,9 @@ h6 {
   border: solid 2px;
 }
 
+.input-wrapper {
+  position: relative;
+}
 .input-label {
   color: var(--fontColor);
   -webkit-box-reflect: below -20px linear-gradient(transparent, rgba(102, 18, 18, 0.2));
@@ -147,4 +150,24 @@ h6 {
   padding-left: 0.5rem;
   margin-left: 0.5rem;
   color: #716af7;
+}
+
+.invalid {
+  border: 1px solid rgb(223, 5, 5);
+}
+
+.valid {
+  border: 1px solid rgb(5, 223, 5);
+}
+
+.error-message {
+  position: absolute;
+  color: rgb(223, 5, 5);
+  font-size: 0.8rem;
+  right: 10.5rem;
+  text-align: left;
+}
+
+.error-message::before {
+  content: "-"
 }

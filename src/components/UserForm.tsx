@@ -38,36 +38,46 @@ export default function UserForm(props: UserFormProps) {
     password_confirmation: "",
     org_name: "",
   });
+  const [fieldErrors, setFieldErrors] = React.useState<any>({
+    first_name: "",
+    last_name: "",
+    email: "123",
+    password: "afsdf",
+    password_confirmation: "",
+    org_name: "",
+  });
   const [user, setUser] = React.useState<any>(null);
   console.log(user);
+  const [submitted, setSubmitted] = React.useState<boolean>(false);
 
   const submitForm = async (
     e: React.FormEvent,
     formType: "signIn" | "loggedIn" | "signUp"
   ) => {
     e.preventDefault();
-
-    switch (formType) {
-      case "signIn":
-        let signInResponse = await SessionApi.login({
-          user: {
-            email: userPayload.email,
-            password: userPayload.password,
-            org_name: userPayload.org_name,
-          },
-        });
-        setUser(signInResponse);
-        return;
-        break;
-      case "signUp":
-        let signUpResponse = await UserApi.signup({ user: userPayload });
-        setUser(signUpResponse);
-      case "loggedIn":
-        let loggedInResponse = await SessionApi.loggedIn();
-        setUser(loggedInResponse);
-      default:
-        console.log("error");
-        break;
+    setSubmitted(true);
+    try {
+      switch (formType) {
+        case "signIn":
+          let signInResponse = await SessionApi.login({
+            user: {
+              email: userPayload.email,
+              password: userPayload.password,
+              org_name: userPayload.org_name,
+            },
+          });
+          setUser(signInResponse);
+          return;
+          break;
+        case "signUp":
+          let signUpResponse = await UserApi.signup({ user: userPayload });
+          setUser(signUpResponse);
+        default:
+          console.log("error");
+          break;
+      }
+    } catch (err) {
+      console.log({ err });
     }
   };
 
@@ -87,6 +97,8 @@ export default function UserForm(props: UserFormProps) {
                 type={input.type}
                 value={userPayload}
                 onChange={setUserPayload}
+                submitted={submitted}
+                fieldErrors={fieldErrors}
               />
             ))
           : registerInputs.map((input, i) => (
@@ -97,6 +109,8 @@ export default function UserForm(props: UserFormProps) {
                 type={input.type}
                 value={userPayload}
                 onChange={setUserPayload}
+                submitted={submitted}
+                fieldErrors={fieldErrors}
               />
             ))}
         <Buttons formType={formType} />
