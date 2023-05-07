@@ -1,5 +1,5 @@
 import { ApiCaller } from "../helpers/index";
-import { UserId, UserTypes, UserPayload } from "./types";
+import { UserPayload } from "./types";
 
 export default class UserApi extends ApiCaller {
   static path = "users";

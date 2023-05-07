@@ -52,6 +52,8 @@ h6 {
 
 /* CSS reset */
 .App {
+  position: fixed;
+  margin: 15% auto;
   width: 440px;
   overflow-y: auto;
 }
@@ -133,7 +135,7 @@ h6 {
 .input:focus {
   outline: none;
   border-color: #a9a5f3;
-  border: solid 2px;
+  border: solid 1px;
 }
 
 .input-wrapper {

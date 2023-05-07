@@ -3,6 +3,7 @@ import React from "react";
 import Input from "./Input";
 import SessionApi from "../resources/sessions/api";
 import Buttons from "../layouts/Buttons";
+import config from "../config";
 
 const registerInputs = [
   { name: "first_name", displayName: "First Name:" },
@@ -27,9 +28,13 @@ interface UserFormProps {
   formType: FormType;
 }
 
+interface Payload {
+  [key: string]: string | null;
+}
+
 export default function UserForm(props: UserFormProps) {
   const { formType } = props;
-  const [userPayload, setUserPayload] = React.useState<any>({
+  const [userPayload, setUserPayload] = React.useState<Payload>({
     id: null,
     first_name: "",
     last_name: "",
@@ -38,7 +43,7 @@ export default function UserForm(props: UserFormProps) {
     password_confirmation: "",
     org_name: "",
   });
-  const [fieldErrors, setFieldErrors] = React.useState<any>({
+  const [fieldErrors, setFieldErrors] = React.useState<Payload>({
     first_name: "",
     last_name: "",
     email: "123",
@@ -48,14 +53,12 @@ export default function UserForm(props: UserFormProps) {
   });
   const [user, setUser] = React.useState<any>(null);
   console.log(user);
-  const [submitted, setSubmitted] = React.useState<boolean>(false);
 
   const submitForm = async (
     e: React.FormEvent,
     formType: "signIn" | "loggedIn" | "signUp"
   ) => {
     e.preventDefault();
-    setSubmitted(true);
     try {
       switch (formType) {
         case "signIn":
@@ -81,11 +84,17 @@ export default function UserForm(props: UserFormProps) {
     }
   };
 
+  if (user?.logged_in) {
+    return (
+      <p>Successfully logged in</p>
+    )
+  }
+
   return (
     <div>
       <form
-        className="user-form"
         id="user-form"
+        className="user-form"
         onSubmit={(e) => submitForm(e, formType)}
       >
         {formType === "signIn"
@@ -97,7 +106,6 @@ export default function UserForm(props: UserFormProps) {
                 type={input.type}
                 value={userPayload}
                 onChange={setUserPayload}
-                submitted={submitted}
                 fieldErrors={fieldErrors}
               />
             ))
@@ -109,11 +117,17 @@ export default function UserForm(props: UserFormProps) {
                 type={input.type}
                 value={userPayload}
                 onChange={setUserPayload}
-                submitted={submitted}
                 fieldErrors={fieldErrors}
               />
             ))}
         <Buttons formType={formType} />
+        {/* <a
+          href="http://localhost:5173"
+          onClick={() => window.open(`${config.BASE_URL}`, 'newwindow', 'width=500, height=400')}
+          // target="_blank"
+        >
+          Click
+        </a> */}
       </form>
     </div>
   );

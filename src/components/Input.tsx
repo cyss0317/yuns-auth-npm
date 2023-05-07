@@ -17,20 +17,16 @@ export default function Input(props: InputProps) {
     type = "text",
     value,
     onChange,
-    submitted = false,
     fieldErrors
   } = props;
   const [className, setClassName] = React.useState<string>("");
 
-  React.useEffect(() => {
-    const checkValidity = () => {
-      if (submitted) {
-        setClassName(value[name].length === 0 ? "invalid" : "valid");
-      }
-    };
-    checkValidity();
-  }, [submitted]);
-  console.log(fieldErrors[name]);
+  // !fieldErrors[name]?.length > 0 ?
+  //   setClassName("valid")
+  // : setClassName("invalid")
+
+  console.log(className)
+  // console.log(fieldErrors[name]);
   return (
     <div className="input-wrapper">
       <label className="input-label" htmlFor={name}>
@@ -48,7 +44,7 @@ export default function Input(props: InputProps) {
           onChange({ ...value, [name]: e.target.value });
         }}
       />
-      <p className="error-message" hidden={!fieldErrors[name].length}>{fieldErrors[name]}</p>
+      {/* <div className="error-message" hidden={!fieldErrors[name].length}>{fieldErrors[name]}</div> */}
     </div>
   );
 }
