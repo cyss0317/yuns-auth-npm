@@ -1,7 +1,7 @@
 import { ApiCaller } from "../helpers";
 import { SessionPayload } from "./types";
 
-export default class SessionApi {
+export default class SessionApi extends ApiCaller {
   static path = "sessions";
   static login = async (user: Partial<SessionPayload>) => {
     const result = await ApiCaller.makeRequest("sessions", "POST", user)
@@ -10,7 +10,7 @@ export default class SessionApi {
 
   static loggedIn = async () => {
     const result = await ApiCaller.makeRequest("logged_in", "GET")
-    return result;
+    return result as boolean;
   }
 
   static logout = async () => {

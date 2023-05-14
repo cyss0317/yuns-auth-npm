@@ -60,7 +60,6 @@ h6 {
 
 .user-form {
   display: flex;
-  display: flex;
   flex-direction: column;
   align-items: self-end;
   margin: 1rem;
@@ -138,21 +137,12 @@ h6 {
   border: solid 1px;
 }
 
-.input-wrapper {
-  position: relative;
-}
+
 .input-label {
   color: var(--fontColor);
   -webkit-box-reflect: below -20px linear-gradient(transparent, rgba(102, 18, 18, 0.2));
 }
 
-.input {
-  border: 1.5px solid rgb(219, 215, 250);
-  border-radius: 0.3rem;
-  padding-left: 0.5rem;
-  margin-left: 0.5rem;
-  color: #716af7;
-}
 
 .invalid {
   border: 1px solid rgb(223, 5, 5);
@@ -160,16 +150,4 @@ h6 {
 
 .valid {
   border: 1px solid rgb(5, 223, 5);
-}
-
-.error-message {
-  position: absolute;
-  color: rgb(223, 5, 5);
-  font-size: 0.8rem;
-  right: 10.5rem;
-  text-align: left;
-}
-
-.error-message::before {
-  content: "-"
 }
