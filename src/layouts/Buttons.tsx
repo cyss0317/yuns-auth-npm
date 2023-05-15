@@ -3,14 +3,14 @@ interface FooterProps {
 }
 
 const formTypeTitle = {
-  "signIn": "Sign Up",
-  "signUp": "Sign In",
-  "loggedIn": "Logged In",
-}
+  signIn: "Sign Up",
+  signUp: "Sign In",
+  loggedIn: "Logged In",
+};
 
 export default function Buttons(props: FooterProps) {
   const { formType } = props;
-  console.log(formType)
+  console.log(formType);
   return (
     <div className="button-group">
       {/* < Button formType="signup" />  */}

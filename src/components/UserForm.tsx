@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import UserApi from "../resources/users/api";
 import SessionApi from "../resources/sessions/api";
 import Buttons from "../layouts/Buttons";
+// @ts-ignore
 import { Input } from "simple-input-comp";
 import config from "../config";
 
@@ -26,7 +27,7 @@ interface Errors {
 const registerInputs = [
   { name: "first_name", displayName: "First Name:" },
   { name: "last_name", displayName: "Last Name:" },
-  { name: "email", displayName: "Email:", type: "email" },
+  { name: "email", displayName: "Email:" },
   { name: "password", displayName: "Password:", type: "password" },
   {
     name: "password_confirmation",
@@ -47,7 +48,7 @@ export default function UserForm(props: UserFormProps) {
     id: null,
     first_name: "",
     last_name: "",
-    email: "5555",
+    email: "",
     password: "",
     password_confirmation: "",
     org_name: "",
@@ -55,29 +56,43 @@ export default function UserForm(props: UserFormProps) {
   const [fieldErrors, setFieldErrors] = useState<Errors>({
     first_name: "",
     last_name: "",
-    email: "123",
-    password: "afsdf",
+    email: "",
+    password: "",
     password_confirmation: "",
-    org_name: "124",
+    org_name: "",
   });
   const [user, setUser] = useState<any>(null);
 
-  const isSessionAlive = useMemo(async () => {
-    const session = await SessionApi.loggedIn();
-    return await session;
-  }, [user?.id]);
-  console.log("isSessionAlive", isSessionAlive);
+  // const isSessionAlive = useMemo(async () => {
+  //   const session = await SessionApi.loggedIn();
+  //   return await session;
+  // }, [user?.id]);
+
+  // console.log("isSessionAlive", isSessionAlive);
   if (user?.logged_in) {
     return <p>Successfully logged in</p>;
   }
 
+  console.log({ fieldErrors });
+  console.log("password", fieldErrors.password);
   const validator = (): boolean => {
     let validated = true;
+    let errors: Errors = {
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: [],
+      password_confirmation: "",
+      org_name: "",
+    };
+
     const emailValidator = (): void => {
       const pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      const isValidated = pattern.test(userPayload.email);
+      const isValidated = pattern.test(
+        userPayload.email !== null ? userPayload.email : ""
+      );
       if (!isValidated) {
-        setFieldErrors((prev) => ({ ...prev, email: "Email is not correct" }));
+        errors = { ...errors, email: "Email is not correct" };
         validated = false;
       }
     };
@@ -87,49 +102,60 @@ export default function UserForm(props: UserFormProps) {
       const includesCapitalLetter = /(?=.*[A-Z])/;
       const lengthValidator = /(?=.*[a-zA-Z]).{8,}$/;
 
-      if (!includesDigit.test(userPayload.password)) {
-        setFieldErrors((prev) => ({
-          ...prev,
-          pssaword: [...prev.password, "Must includes at least 1 number"],
-        }));
+      if (
+        userPayload.password !== null &&
+        !includesDigit.test(userPayload.password)
+      ) {
+        errors = {
+          ...errors,
+          password: [...errors.password, "Must includes at least 1 number"],
+        };
         validated = false;
       }
-      if (!includesCapitalLetter.test(userPayload.password)) {
-        setFieldErrors((prev) => ({
-          ...prev,
-          pssaword: [
-            ...prev.password,
+      if (
+        userPayload.password !== null &&
+        !includesCapitalLetter.test(userPayload.password)
+      ) {
+        errors = {
+          ...errors,
+          password: [
+            ...errors.password,
             "Must includes at least 1 capital letter",
           ],
-        }));
+        };
         validated = false;
       }
-      if (!lengthValidator.test(userPayload.password)) {
-        setFieldErrors((prev) => ({
-          ...prev,
-          pssaword: [...prev.password, "Must be longer than 8 characters"],
-        }));
+      if (
+        userPayload.password !== null &&
+        !lengthValidator.test(userPayload.password)
+      ) {
+        errors = {
+          ...errors,
+          password: [...errors.password, "Must be longer than 8 characters"],
+        };
         validated = false;
       }
-      if (userPayload.passwrod === userPayload.password_confirmation) {
-        setFieldErrors((prev) => ({
-          ...prev,
-          pssaword: [...prev.password, "Passwords have to match"],
-        }));
+      if (userPayload.password !== userPayload.password_confirmation) {
+        errors = {
+          ...errors,
+          password: [...errors.password, "Passwords have to match"],
+          password_confirmation: "Passwords have to match",
+        };
         validated = false;
       }
     };
 
     emailValidator();
     passwordValidator();
-
+    setFieldErrors(errors);
+    console.log("invoked");
     return validated;
   };
 
   const submitForm = async (e: React.FormEvent, formType: FormType) => {
     e.preventDefault();
     // check the validation and only submit the form if all passed
-    if (validator()) {
+    if (!validator()) {
       return;
     }
     try {
@@ -145,7 +171,6 @@ export default function UserForm(props: UserFormProps) {
             });
             setUser(signInResponse);
             sessionStorage.setItem(signInResponse.id, "true");
-            window.USER = signInResponse;
           } catch (err) {
             console.log({ err });
           }
@@ -158,7 +183,6 @@ export default function UserForm(props: UserFormProps) {
           };
           setUser(user);
           sessionStorage.setItem(user.id, "true");
-          window.USER = user;
           break;
         default:
           console.log("error");
@@ -188,9 +212,7 @@ export default function UserForm(props: UserFormProps) {
             displayName={input.displayName}
             type={input.type}
             value={userPayload[input.name]}
-            onChange={(e: { target: { value: any } }) =>
-              setUserPayload({ ...userPayload, [input.name]: e.target.value })
-            }
+            onChange={setUserPayload}
             errorMessage={fieldErrors[input.name]}
             resetErrorMessage={() =>
               setFieldErrors({ ...fieldErrors, [input.name]: "" })

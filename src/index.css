@@ -54,7 +54,7 @@ h6 {
 .App {
   position: fixed;
   margin: 15% auto;
-  width: 440px;
+  width: 500px;
   overflow-y: auto;
 }
 
@@ -95,6 +95,7 @@ h6 {
   border-radius: 1rem;
   padding-left: 1rem;
   margin-left: 1rem;
+  width: 15rem;
 }
 
 .button:has(> a) {
@@ -137,12 +138,10 @@ h6 {
   border: solid 1px;
 }
 
-
 .input-label {
   color: var(--fontColor);
   -webkit-box-reflect: below -20px linear-gradient(transparent, rgba(102, 18, 18, 0.2));
 }
-
 
 .invalid {
   border: 1px solid rgb(223, 5, 5);
