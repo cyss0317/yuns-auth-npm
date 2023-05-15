@@ -3,5 +3,5 @@ export interface SessionPayload {
     email: string;
     password: string;
     org_name: string;
-  }
+  };
 }

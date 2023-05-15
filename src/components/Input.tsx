@@ -17,7 +17,7 @@ export default function Input(props: InputProps) {
     type = "text",
     value,
     onChange,
-    fieldErrors
+    fieldErrors,
   } = props;
   const [className, setClassName] = React.useState<string>("");
 
@@ -25,7 +25,7 @@ export default function Input(props: InputProps) {
   //   setClassName("valid")
   // : setClassName("invalid")
 
-  console.log(className)
+  console.log(className);
   // console.log(fieldErrors[name]);
   return (
     <div className="input-wrapper">

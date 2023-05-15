@@ -54,12 +54,11 @@ h6 {
 .App {
   position: fixed;
   margin: 15% auto;
-  width: 440px;
+  width: 500px;
   overflow-y: auto;
 }
 
 .user-form {
-  display: flex;
   display: flex;
   flex-direction: column;
   align-items: self-end;
@@ -96,6 +95,7 @@ h6 {
   border-radius: 1rem;
   padding-left: 1rem;
   margin-left: 1rem;
+  width: 15rem;
 }
 
 .button:has(> a) {
@@ -138,20 +138,9 @@ h6 {
   border: solid 1px;
 }
 
-.input-wrapper {
-  position: relative;
-}
 .input-label {
   color: var(--fontColor);
   -webkit-box-reflect: below -20px linear-gradient(transparent, rgba(102, 18, 18, 0.2));
-}
-
-.input {
-  border: 1.5px solid rgb(219, 215, 250);
-  border-radius: 0.3rem;
-  padding-left: 0.5rem;
-  margin-left: 0.5rem;
-  color: #716af7;
 }
 
 .invalid {
@@ -160,16 +149,4 @@ h6 {
 
 .valid {
   border: 1px solid rgb(5, 223, 5);
-}
-
-.error-message {
-  position: absolute;
-  color: rgb(223, 5, 5);
-  font-size: 0.8rem;
-  right: 10.5rem;
-  text-align: left;
-}
-
-.error-message::before {
-  content: "-"
 }

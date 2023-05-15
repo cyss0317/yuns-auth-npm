@@ -1,9 +1,28 @@
+import React, { useState, useMemo } from "react";
 import UserApi from "../resources/users/api";
-import React from "react";
-import Input from "./Input";
 import SessionApi from "../resources/sessions/api";
 import Buttons from "../layouts/Buttons";
+// @ts-ignore
+import { Input } from "simple-input-comp";
 import config from "../config";
+
+enum FormType {
+  SignIn = "signIn",
+  LoggedIn = "loggedIn",
+  SignUp = "signUp",
+}
+
+interface UserFormProps {
+  formType: FormType;
+}
+
+interface Payload {
+  [key: string]: string | null;
+}
+
+interface Errors {
+  [key: string]: string | Array<string>;
+}
 
 const registerInputs = [
   { name: "first_name", displayName: "First Name:" },
@@ -23,18 +42,9 @@ const signInInputs = [
   { name: "org_name", displayName: "Organization Name:" },
 ];
 
-export type FormType = "signIn" | "loggedIn" | "signUp";
-interface UserFormProps {
-  formType: FormType;
-}
-
-interface Payload {
-  [key: string]: string | null;
-}
-
 export default function UserForm(props: UserFormProps) {
   const { formType } = props;
-  const [userPayload, setUserPayload] = React.useState<Payload>({
+  const [userPayload, setUserPayload] = useState<Payload>({
     id: null,
     first_name: "",
     last_name: "",
@@ -43,38 +53,137 @@ export default function UserForm(props: UserFormProps) {
     password_confirmation: "",
     org_name: "",
   });
-  const [fieldErrors, setFieldErrors] = React.useState<Payload>({
+  const [fieldErrors, setFieldErrors] = useState<Errors>({
     first_name: "",
     last_name: "",
-    email: "123",
-    password: "afsdf",
+    email: "",
+    password: "",
     password_confirmation: "",
     org_name: "",
   });
-  const [user, setUser] = React.useState<any>(null);
-  console.log(user);
+  const [user, setUser] = useState<any>(null);
 
-  const submitForm = async (
-    e: React.FormEvent,
-    formType: "signIn" | "loggedIn" | "signUp"
-  ) => {
+  // const isSessionAlive = useMemo(async () => {
+  //   const session = await SessionApi.loggedIn();
+  //   return await session;
+  // }, [user?.id]);
+
+  // console.log("isSessionAlive", isSessionAlive);
+  if (user?.logged_in) {
+    return <p>Successfully logged in</p>;
+  }
+
+  console.log({ fieldErrors });
+  console.log("password", fieldErrors.password);
+  const validator = (): boolean => {
+    let validated = true;
+    let errors: Errors = {
+      first_name: "",
+      last_name: "",
+      email: "",
+      password: [],
+      password_confirmation: "",
+      org_name: "",
+    };
+
+    const emailValidator = (): void => {
+      const pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      const isValidated = pattern.test(
+        userPayload.email !== null ? userPayload.email : ""
+      );
+      if (!isValidated) {
+        errors = { ...errors, email: "Email is not correct" };
+        validated = false;
+      }
+    };
+
+    const passwordValidator = (): void => {
+      const includesDigit = /^(?=.*\d)/;
+      const includesCapitalLetter = /(?=.*[A-Z])/;
+      const lengthValidator = /(?=.*[a-zA-Z]).{8,}$/;
+
+      if (
+        userPayload.password !== null &&
+        !includesDigit.test(userPayload.password)
+      ) {
+        errors = {
+          ...errors,
+          password: [...errors.password, "Must includes at least 1 number"],
+        };
+        validated = false;
+      }
+      if (
+        userPayload.password !== null &&
+        !includesCapitalLetter.test(userPayload.password)
+      ) {
+        errors = {
+          ...errors,
+          password: [
+            ...errors.password,
+            "Must includes at least 1 capital letter",
+          ],
+        };
+        validated = false;
+      }
+      if (
+        userPayload.password !== null &&
+        !lengthValidator.test(userPayload.password)
+      ) {
+        errors = {
+          ...errors,
+          password: [...errors.password, "Must be longer than 8 characters"],
+        };
+        validated = false;
+      }
+      if (userPayload.password !== userPayload.password_confirmation) {
+        errors = {
+          ...errors,
+          password: [...errors.password, "Passwords have to match"],
+          password_confirmation: "Passwords have to match",
+        };
+        validated = false;
+      }
+    };
+
+    emailValidator();
+    passwordValidator();
+    setFieldErrors(errors);
+    console.log("invoked");
+    return validated;
+  };
+
+  const submitForm = async (e: React.FormEvent, formType: FormType) => {
     e.preventDefault();
+    // check the validation and only submit the form if all passed
+    if (!validator()) {
+      return;
+    }
     try {
       switch (formType) {
-        case "signIn":
-          let signInResponse = await SessionApi.login({
-            user: {
-              email: userPayload.email,
-              password: userPayload.password,
-              org_name: userPayload.org_name,
-            },
-          });
-          setUser(signInResponse);
-          return;
+        case FormType.SignIn:
+          try {
+            let signInResponse = await SessionApi.login({
+              user: {
+                email: userPayload.email || "",
+                password: userPayload.password || "",
+                org_name: userPayload.org_name || "",
+              },
+            });
+            setUser(signInResponse);
+            sessionStorage.setItem(signInResponse.id, "true");
+          } catch (err) {
+            console.log({ err });
+          }
           break;
-        case "signUp":
+        case FormType.SignUp:
           let signUpResponse = await UserApi.signup({ user: userPayload });
-          setUser(signUpResponse);
+          let user = {
+            ...signUpResponse,
+            user: { ...signUpResponse.user, loggedIn: true },
+          };
+          setUser(user);
+          sessionStorage.setItem(user.id, "true");
+          break;
         default:
           console.log("error");
           break;
@@ -84,11 +193,9 @@ export default function UserForm(props: UserFormProps) {
     }
   };
 
-  if (user?.logged_in) {
-    return (
-      <p>Successfully logged in</p>
-    )
-  }
+  console.log(userPayload);
+  const inputList =
+    formType === FormType.SignIn ? signInInputs : registerInputs;
 
   return (
     <div>
@@ -97,29 +204,21 @@ export default function UserForm(props: UserFormProps) {
         className="user-form"
         onSubmit={(e) => submitForm(e, formType)}
       >
-        {formType === "signIn"
-          ? signInInputs.map((input, i) => (
-              <Input
-                key={`${input.name}-${i}`}
-                name={input.name}
-                displayName={input.displayName}
-                type={input.type}
-                value={userPayload}
-                onChange={setUserPayload}
-                fieldErrors={fieldErrors}
-              />
-            ))
-          : registerInputs.map((input, i) => (
-              <Input
-                key={`${input.name}-${i}`}
-                name={input.name}
-                displayName={input.displayName}
-                type={input.type}
-                value={userPayload}
-                onChange={setUserPayload}
-                fieldErrors={fieldErrors}
-              />
-            ))}
+        {inputList.map((input, i) => (
+          <Input
+            color="#716af7"
+            key={`${input.name}-${i}`}
+            name={input.name}
+            displayName={input.displayName}
+            type={input.type}
+            value={userPayload[input.name]}
+            onChange={setUserPayload}
+            errorMessage={fieldErrors[input.name]}
+            resetErrorMessage={() =>
+              setFieldErrors({ ...fieldErrors, [input.name]: "" })
+            }
+          />
+        ))}
         <Buttons formType={formType} />
         {/* <a
           href="http://localhost:5173"
